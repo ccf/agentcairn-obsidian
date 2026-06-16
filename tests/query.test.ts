@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { filterNotes, sortNotes, buildGraph } from "../src/query";
+import { filterNotes, sortNotes } from "../src/query";
 import type { MemoryNote } from "../src/model";
 
 const mk = (p: Partial<MemoryNote>): MemoryNote => ({
@@ -35,14 +35,5 @@ describe("sortNotes", () => {
   });
   it("importance desc, undefined last", () => {
     expect(sortNotes(notes, "importance").map(n => n.path)).toEqual(["b.md", "a.md", "c.md"]);
-  });
-});
-
-describe("buildGraph", () => {
-  it("keeps only edges between in-set memory notes; drops unresolved", () => {
-    const notes = [mk({ path: "a.md", links: ["b.md", "ghost.md"] }), mk({ path: "b.md", links: [] })];
-    const g = buildGraph(notes);
-    expect(g.nodes.map(n => n.path).sort()).toEqual(["a.md", "b.md"]);
-    expect(g.edges).toEqual([{ source: "a.md", target: "b.md" }]);
   });
 });

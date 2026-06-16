@@ -25,22 +25,3 @@ export function sortNotes(notes: MemoryNote[], key: SortKey): MemoryNote[] {
   }
   return copy;
 }
-
-export interface GraphEdge { source: string; target: string; }
-export interface Graph { nodes: MemoryNote[]; edges: GraphEdge[]; }
-
-export function buildGraph(notes: MemoryNote[]): Graph {
-  const inSet = new Set(notes.map((n) => n.path));
-  const seen = new Set<string>();
-  const edges: GraphEdge[] = [];
-  for (const n of notes) {
-    for (const t of n.links) {
-      if (!inSet.has(t)) continue;
-      const key = [n.path, t].sort().join(" ");
-      if (seen.has(key)) continue;
-      seen.add(key);
-      edges.push({ source: n.path, target: t });
-    }
-  }
-  return { nodes: notes, edges };
-}

@@ -2,13 +2,11 @@ import { ItemView, WorkspaceLeaf } from "obsidian";
 import type AgentcairnPlugin from "./main";
 import { filterNotes, sortNotes, SortKey, FilterCriteria } from "./query";
 import { MemoryNote } from "./model";
-import { renderGraph } from "./graph";
 
 export const VIEW_TYPE_MEMORY = "agentcairn-memory";
 
 export class MemoryView extends ItemView {
   plugin: AgentcairnPlugin;
-  mode: "list" | "graph" = "list";
   criteria: FilterCriteria = {};
   sort: SortKey = "newest";
   private timer: number | null = null;
@@ -34,13 +32,11 @@ export class MemoryView extends ItemView {
     root.empty();
     root.addClass("agentcairn-memory");
     const all = this.plugin.buildModel();
-    this.renderHeader(root);
     this.renderFilterBar(root, all);
     const shown = sortNotes(filterNotes(all, this.criteria), this.sort);
     const body = root.createDiv({ cls: "ac-body" });
     if (all.length === 0) body.createDiv({ cls: "ac-empty", text: "No agentcairn memories found in this vault." });
-    else if (this.mode === "list") this.renderList(body, shown);
-    else renderGraph(body, shown, (path) => this.plugin.openNote(path));
+    else this.renderList(body, shown);
     this.renderProvenance(root);
   }
 
@@ -58,18 +54,6 @@ export class MemoryView extends ItemView {
     for (const k of ["newest", "importance"]) sortSel.createEl("option", { value: k, text: k });
     sortSel.value = this.sort;
     sortSel.onchange = () => { this.sort = sortSel.value as SortKey; this.scheduleRender(); };
-  }
-
-  private renderHeader(root: HTMLElement) {
-    const header = root.createDiv({ cls: "ac-header" });
-    const seg = header.createDiv({ cls: "ac-seg" });
-    for (const m of ["list", "graph"] as const) {
-      const btn = seg.createEl("button", {
-        cls: `ac-seg-btn${this.mode === m ? " is-active" : ""}`,
-        text: m === "list" ? "List" : "Graph",
-      });
-      btn.onclick = () => { if (this.mode !== m) { this.mode = m; this.render(); } };
-    }
   }
 
   private dropdown(bar: HTMLElement, key: keyof FilterCriteria, opts: string[]) {

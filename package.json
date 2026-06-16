@@ -1,6 +1,6 @@
 {
   "name": "agentcairn-obsidian",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "See, filter, and navigate your agentcairn agent-memory vault in Obsidian.",
   "main": "main.js",
   "scripts": {
@@ -18,9 +18,5 @@
     "obsidian": "latest",
     "typescript": "^5.4.0",
     "vitest": "^1.6.0"
-  },
-  "dependencies": {
-    "d3-force": "^3.0.0",
-    "@types/d3-force": "^3.0.10"
   }
 }

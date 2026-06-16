@@ -9,7 +9,8 @@ agentcairn stores your coding agent's memory as plain Markdown in a vault you ow
 - **Memory list** — every memory note, with keyword search and filters by **project**, **harness**, **currency**, and **tag**, sortable by newest or importance. Click a row to open the note.
 - **Provenance panel** — for the active memory note, see where it came from: origin **project**, **harness**, and **session**, plus an importance and a **currency** badge.
 - **Currency awareness** — superseded and expired memories are dimmed and badged, matching how agentcairn's recall demotes them (`current` / `superseded` / `expired` / `not_yet_valid`).
-- **Memory graph** — a force-directed graph of your memory notes (edges from `[[wikilinks]]`), **colored by project**, with superseded/expired notes dimmed and their edges dashed. Click a node to open it.
+
+> **Deferred:** a memory *graph* is intentionally not in this version. agentcairn's ingested notes are independent distilled facts (they don't `[[wikilink]]` each other), so a link-based graph is empty on a real vault. A graph returns when it can draw **meaningful edges** — semantic relatedness (from embeddings) and `superseded_by` lineage — rather than dots.
 
 ## What it reads (frontmatter contract)
 
