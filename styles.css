@@ -1,0 +1,10 @@
+.agentcairn-memory .ac-filter { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; }
+.agentcairn-memory .ac-row { padding: 6px 8px; border-bottom: 1px solid var(--background-modifier-border); cursor: pointer; }
+.agentcairn-memory .ac-row:hover { background: var(--background-modifier-hover); }
+.agentcairn-memory .ac-title { font-weight: 600; }
+.agentcairn-memory .ac-meta { font-size: 0.8em; color: var(--text-muted); }
+.agentcairn-memory .ac-superseded, .agentcairn-memory .ac-expired { opacity: 0.5; }
+.agentcairn-memory .ac-badge { font-size: 0.7em; padding: 0 4px; border-radius: 4px; background: var(--background-modifier-border); margin-left: 4px; }
+.agentcairn-memory .ac-prov { margin-top: 8px; padding: 8px; border-top: 1px solid var(--background-modifier-border); font-size: 0.85em; }
+.agentcairn-memory .ac-empty { padding: 16px; color: var(--text-muted); }
+.agentcairn-memory .ac-graph { width: 100%; height: 100%; }
