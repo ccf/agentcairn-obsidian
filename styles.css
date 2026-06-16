@@ -1,3 +1,7 @@
+.agentcairn-memory .ac-header { padding: 6px 6px 0; }
+.agentcairn-memory .ac-seg { display: inline-flex; border: 1px solid var(--background-modifier-border); border-radius: 6px; overflow: hidden; }
+.agentcairn-memory .ac-seg-btn { padding: 4px 14px; border: none; border-radius: 0; background: transparent; box-shadow: none; cursor: pointer; font-size: 0.9em; }
+.agentcairn-memory .ac-seg-btn.is-active { background: var(--interactive-accent); color: var(--text-on-accent); }
 .agentcairn-memory .ac-filter { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; }
 .agentcairn-memory .ac-row { padding: 6px 8px; border-bottom: 1px solid var(--background-modifier-border); cursor: pointer; }
 .agentcairn-memory .ac-row:hover { background: var(--background-modifier-hover); }

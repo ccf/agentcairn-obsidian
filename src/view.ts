@@ -34,6 +34,7 @@ export class MemoryView extends ItemView {
     root.empty();
     root.addClass("agentcairn-memory");
     const all = this.plugin.buildModel();
+    this.renderHeader(root);
     this.renderFilterBar(root, all);
     const shown = sortNotes(filterNotes(all, this.criteria), this.sort);
     const body = root.createDiv({ cls: "ac-body" });
@@ -57,8 +58,18 @@ export class MemoryView extends ItemView {
     for (const k of ["newest", "importance"]) sortSel.createEl("option", { value: k, text: k });
     sortSel.value = this.sort;
     sortSel.onchange = () => { this.sort = sortSel.value as SortKey; this.scheduleRender(); };
-    const toggle = bar.createEl("button", { text: this.mode === "list" ? "Graph" : "List" });
-    toggle.onclick = () => { this.mode = this.mode === "list" ? "graph" : "list"; this.render(); };
+  }
+
+  private renderHeader(root: HTMLElement) {
+    const header = root.createDiv({ cls: "ac-header" });
+    const seg = header.createDiv({ cls: "ac-seg" });
+    for (const m of ["list", "graph"] as const) {
+      const btn = seg.createEl("button", {
+        cls: `ac-seg-btn${this.mode === m ? " is-active" : ""}`,
+        text: m === "list" ? "List" : "Graph",
+      });
+      btn.onclick = () => { if (this.mode !== m) { this.mode = m; this.render(); } };
+    }
   }
 
   private dropdown(bar: HTMLElement, key: keyof FilterCriteria, opts: string[]) {
