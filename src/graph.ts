@@ -48,11 +48,26 @@ export function renderGraph(host: HTMLElement, notes: MemoryNote[], onClick: (pa
     .force("link", forceLink<Node, Link>(links).distance(40))
     .force("charge", forceManyBody<Node>().strength(-80))
     .force("center", forceCenter(w / 2, hgt / 2));
+  const fitViewBox = () => {
+    if (!nodes.length) return;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const n of nodes) {
+      const x = n.x ?? 0, y = n.y ?? 0;
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+    const pad = 24;
+    const vw = Math.max(maxX - minX, 1) + pad * 2;
+    const vh = Math.max(maxY - minY, 1) + pad * 2;
+    svg.setAttribute("viewBox", `${minX - pad} ${minY - pad} ${vw} ${vh}`);
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  };
   sim.on("tick", () => {
     links.forEach((l, i) => {
       lineEls[i].setAttribute("x1", String(l.source.x)); lineEls[i].setAttribute("y1", String(l.source.y));
       lineEls[i].setAttribute("x2", String(l.target.x)); lineEls[i].setAttribute("y2", String(l.target.y));
     });
     nodes.forEach((n, i) => { circleEls[i].setAttribute("cx", String(n.x)); circleEls[i].setAttribute("cy", String(n.y)); });
+    fitViewBox();
   });
 }
