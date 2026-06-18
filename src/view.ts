@@ -2,6 +2,7 @@ import { ItemView, WorkspaceLeaf } from "obsidian";
 import type AgentcairnPlugin from "./main";
 import { filterNotes, sortNotes, SortKey, FilterCriteria } from "./query";
 import { MemoryNote } from "./model";
+import { renderGraph } from "./graph";
 
 export const VIEW_TYPE_MEMORY = "agentcairn-memory";
 
@@ -9,6 +10,8 @@ export class MemoryView extends ItemView {
   plugin: AgentcairnPlugin;
   criteria: FilterCriteria = {};
   sort: SortKey = "newest";
+  mode: "list" | "graph" = "list";
+  selectedPath: string | null = null;
   private timer: number | null = null;
 
   constructor(leaf: WorkspaceLeaf, plugin: AgentcairnPlugin) { super(leaf); this.plugin = plugin; }
@@ -17,7 +20,10 @@ export class MemoryView extends ItemView {
   getIcon() { return "brain"; }
 
   async onOpen() {
-    this.registerEvent(this.app.workspace.on("active-leaf-change", () => this.render()));
+    this.registerEvent(this.app.workspace.on("active-leaf-change", () => {
+      if (this.mode === "graph") this.refreshProvenance();
+      else this.render();
+    }));
     this.render();
   }
   async onClose() {}
@@ -36,7 +42,8 @@ export class MemoryView extends ItemView {
     const shown = sortNotes(filterNotes(all, this.criteria), this.sort);
     const body = root.createDiv({ cls: "ac-body" });
     if (all.length === 0) body.createDiv({ cls: "ac-empty", text: "No agentcairn memories found in this vault." });
-    else this.renderList(body, shown);
+    else if (this.mode === "list") this.renderList(body, shown);
+    else renderGraph(body, shown, (path) => { this.selectedPath = path; this.plugin.openNote(path); this.refreshProvenance(); });
     this.renderProvenance(root);
   }
 
@@ -54,6 +61,8 @@ export class MemoryView extends ItemView {
     for (const k of ["newest", "importance"]) sortSel.createEl("option", { value: k, text: k });
     sortSel.value = this.sort;
     sortSel.onchange = () => { this.sort = sortSel.value as SortKey; this.scheduleRender(); };
+    const toggle = bar.createEl("button", { text: this.mode === "list" ? "Graph" : "List" });
+    toggle.onclick = () => { this.mode = this.mode === "list" ? "graph" : "list"; this.selectedPath = null; this.render(); };
   }
 
   private dropdown(bar: HTMLElement, key: keyof FilterCriteria, opts: string[]) {
@@ -79,13 +88,19 @@ export class MemoryView extends ItemView {
 
   private renderProvenance(root: HTMLElement) {
     root.querySelector(".ac-prov")?.remove();
-    const file = this.app.workspace.getActiveFile();
-    if (!file) return;
-    const note = this.plugin.buildModel().find((n) => n.path === file.path);
+    const model = this.plugin.buildModel();
+    const targetPath = this.selectedPath ?? this.app.workspace.getActiveFile()?.path;
+    const note = targetPath ? model.find((n) => n.path === targetPath) : undefined;
     if (!note) return;
     const p = root.createDiv({ cls: "ac-prov" });
-    p.createDiv({ cls: "ac-prov-h", text: "active note" });
+    p.createDiv({ cls: "ac-prov-h", text: this.selectedPath ? "selected" : "active note" });
     p.createDiv({ text: [note.project, note.harness, note.session && `session ${note.session}`].filter(Boolean).join(" · ") });
     p.createSpan({ cls: `ac-badge ac-${note.currency}`, text: note.currency });
+    p.createDiv({ cls: "ac-prov-meta", text: [note.created?.slice(0, 10), note.importance != null ? `imp ${note.importance}` : null].filter(Boolean).join(" · ") });
+  }
+
+  private refreshProvenance() {
+    const root = this.containerEl.children[1] as HTMLElement;
+    this.renderProvenance(root);
   }
 }
