@@ -9,14 +9,22 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "keywords": ["obsidian", "agentcairn", "memory"],
+  "keywords": [
+    "obsidian",
+    "agentcairn",
+    "memory"
+  ],
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/d3-force": "3.0.10",
     "@types/node": "^20",
     "builtin-modules": "^3.3.0",
     "esbuild": "^0.21.0",
     "obsidian": "latest",
     "typescript": "^5.4.0",
     "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "d3-force": "3.0.0"
   }
 }
