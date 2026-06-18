@@ -9,8 +9,7 @@ agentcairn stores your coding agent's memory as plain Markdown in a vault you ow
 - **Memory list** — every memory note, with keyword search and filters by **project**, **harness**, **currency**, and **tag**, sortable by newest or importance. Click a row to open the note.
 - **Provenance panel** — for the active memory note, see where it came from: origin **project**, **harness**, and **session**, plus an importance and a **currency** badge.
 - **Currency awareness** — superseded and expired memories are dimmed and badged, matching how agentcairn's recall demotes them (`current` / `superseded` / `expired` / `not_yet_valid`).
-
-> **Deferred:** a memory *graph* is intentionally not in this version. agentcairn's ingested notes are independent distilled facts (they don't `[[wikilink]]` each other), so a link-based graph is empty on a real vault. A graph returns when it can draw **meaningful edges** — semantic relatedness (from embeddings) and `superseded_by` lineage — rather than dots.
+- **Memory Graph** — a d3-force graph view of the `related:` edges written by `cairn link`. Toggle between List and Graph with the buttons at the top of the view. Nodes are colored by project, sized by importance, and dimmed by currency. Isolated notes (no edges) are parked aside rather than scattered. A legend identifies the color coding. Click any node to open it and drive the provenance panel.
 
 ## What it reads (frontmatter contract)
 
@@ -36,7 +35,7 @@ npm test          # data-layer unit tests (vitest)
 npm run build     # typecheck + bundle to main.js
 ```
 
-The data layer (`src/model.ts`, `src/query.ts`) is pure and unit-tested; the Obsidian views (`src/main.ts`, `src/view.ts`, `src/graph.ts`) are validated manually in a dev vault.
+The data layer (`src/model.ts`, `src/query.ts`, `src/graph-data.ts`) is pure and unit-tested; the Obsidian views (`src/main.ts`, `src/view.ts`, `src/graph.ts`) are validated manually in a dev vault. Populate the graph with `cairn link` before opening the Graph tab in a real vault.
 
 ## License
 
