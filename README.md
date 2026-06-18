@@ -35,7 +35,7 @@ npm test          # data-layer unit tests (vitest)
 npm run build     # typecheck + bundle to main.js
 ```
 
-The data layer (`src/model.ts`, `src/query.ts`, `src/graph-data.ts`) is pure and unit-tested; the Obsidian views (`src/main.ts`, `src/view.ts`, `src/graph.ts`) are validated manually in a dev vault. Populate the graph with `cairn link` before opening the Graph tab in a real vault.
+The data layer (`src/model.ts`, `src/query.ts`, `src/viz.ts`) is pure and unit-tested; the Obsidian views (`src/main.ts`, `src/view.ts`, `src/graph.ts`) are validated manually in a dev vault. Populate the graph with `cairn link` before opening the Graph tab in a real vault.
 
 ## License
 
