@@ -15,7 +15,7 @@ export function renderGraph(
   onClick: (path: string) => void,
   onBackgroundClick: () => void = () => {},
 ): Simulation<Node, Link> {
-  host.empty?.() ?? (host.innerHTML = "");
+  host.empty();
   const MAX = 2000;
   const used = notes.length > MAX ? notes.slice(0, MAX) : notes;
   if (notes.length > MAX) {
@@ -46,7 +46,6 @@ export function renderGraph(
     c.setAttribute("fill", projectColor(n.note.project));
     const op = currencyOpacity(n.note.currency) * (n.isolated ? 0.5 : 1);
     c.setAttribute("opacity", String(op));
-    c.style.cursor = "pointer";
     c.addEventListener("click", () => onClick(n.path));
     const t = document.createElementNS(NS, "title");
     t.textContent = `${n.note.title}${n.note.project ? ` · ${n.note.project}` : ""}`;
