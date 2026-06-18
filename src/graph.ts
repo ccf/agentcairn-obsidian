@@ -9,7 +9,12 @@ interface Link extends SimulationLinkDatum<Node> { source: Node; target: Node; }
 
 const NS = "http://www.w3.org/2000/svg";
 
-export function renderGraph(host: HTMLElement, notes: MemoryNote[], onClick: (path: string) => void): void {
+export function renderGraph(
+  host: HTMLElement,
+  notes: MemoryNote[],
+  onClick: (path: string) => void,
+  onBackgroundClick: () => void = () => {},
+): Simulation<Node, Link> {
   host.empty?.() ?? (host.innerHTML = "");
   const MAX = 2000;
   const used = notes.length > MAX ? notes.slice(0, MAX) : notes;
@@ -25,6 +30,8 @@ export function renderGraph(host: HTMLElement, notes: MemoryNote[], onClick: (pa
   const svg = document.createElementNS(NS, "svg"); svg.setAttribute("class", "ac-graph");
   const w = host.clientWidth || 600, hgt = host.clientHeight || 400;
   svg.setAttribute("viewBox", `0 0 ${w} ${hgt}`); host.appendChild(svg);
+  // Clicking empty canvas (not a node) clears the selection and returns provenance to the active note.
+  svg.addEventListener("click", (e) => { if (e.target === svg) onBackgroundClick(); });
   const gLinks = document.createElementNS(NS, "g"); const gNodes = document.createElementNS(NS, "g");
   svg.appendChild(gLinks); svg.appendChild(gNodes);
 
@@ -61,6 +68,7 @@ export function renderGraph(host: HTMLElement, notes: MemoryNote[], onClick: (pa
   });
 
   renderLegend(host, used);
+  return sim;
 }
 
 // `notes` is MemoryNote[], so project is read directly as n.project.

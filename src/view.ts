@@ -13,6 +13,7 @@ export class MemoryView extends ItemView {
   mode: "list" | "graph" = "list";
   selectedPath: string | null = null;
   private timer: number | null = null;
+  private sim: { stop: () => void } | null = null;
 
   constructor(leaf: WorkspaceLeaf, plugin: AgentcairnPlugin) { super(leaf); this.plugin = plugin; }
   getViewType() { return VIEW_TYPE_MEMORY; }
@@ -26,7 +27,7 @@ export class MemoryView extends ItemView {
     }));
     this.render();
   }
-  async onClose() {}
+  async onClose() { this.sim?.stop(); this.sim = null; }
 
   scheduleRender() {
     if (this.timer) window.clearTimeout(this.timer);
@@ -34,16 +35,27 @@ export class MemoryView extends ItemView {
   }
 
   render() {
+    // Stop any prior d3-force simulation before tearing down the SVG, so re-renders
+    // (toggle, filter, vault change) don't leave layout loops ticking on detached nodes.
+    this.sim?.stop();
+    this.sim = null;
     const root = this.containerEl.children[1] as HTMLElement;
     root.empty();
     root.addClass("agentcairn-memory");
     const all = this.plugin.buildModel();
     this.renderFilterBar(root, all);
     const shown = sortNotes(filterNotes(all, this.criteria), this.sort);
+    // Drop a selection that filtering/sort has removed from view, so provenance never
+    // labels an off-screen note as "selected".
+    if (this.selectedPath && !shown.some((n) => n.path === this.selectedPath)) this.selectedPath = null;
     const body = root.createDiv({ cls: "ac-body" });
     if (all.length === 0) body.createDiv({ cls: "ac-empty", text: "No agentcairn memories found in this vault." });
     else if (this.mode === "list") this.renderList(body, shown);
-    else renderGraph(body, shown, (path) => { this.selectedPath = path; this.plugin.openNote(path); this.refreshProvenance(); });
+    else this.sim = renderGraph(
+      body, shown,
+      (path) => { this.selectedPath = path; this.plugin.openNote(path); this.refreshProvenance(); },
+      () => { this.selectedPath = null; this.refreshProvenance(); },
+    );
     this.renderProvenance(root);
   }
 
