@@ -4,6 +4,8 @@ on:
     tags: ["*.*.*"]
 permissions:
   contents: write
+  id-token: write      # mint the OIDC token the attestation is signed with
+  attestations: write  # write the build-provenance attestation
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,6 +17,13 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      - name: Attest build provenance for release assets
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
       - name: Create release with plugin assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
