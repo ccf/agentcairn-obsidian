@@ -1,9 +1,9 @@
 {
   "id": "agentcairn",
   "name": "agentcairn",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "minAppVersion": "1.7.2",
-  "description": "See, filter, and navigate your agentcairn agent-memory vault: provenance and currency at a glance.",
+  "description": "See and navigate your AI agent's long-term memory — a graph of memories with provenance and currency.",
   "author": "Charles C. Figueiredo",
   "authorUrl": "https://github.com/ccf",
   "isDesktopOnly": true
