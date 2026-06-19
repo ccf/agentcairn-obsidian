@@ -4,6 +4,14 @@ See, filter, and navigate your [agentcairn](https://github.com/ccf/agentcairn) a
 
 agentcairn stores your coding agent's memory as plain Markdown in a vault you own. This plugin adds an interactive **Memory view** over that vault: it's **read-only** and **vault-native** — it reads only Obsidian's own metadata, never writes to your notes, and never touches agentcairn's DuckDB index.
 
+![The agentcairn Memory graph in Obsidian — memories wired by related links, colored by project, with a legend and provenance panel](https://agentcairn.dev/obsidian-graph.png)
+
+*Memory graph — related memories wired by `[[wikilinks]]`, colored by project, sized by importance, with provenance and currency.*
+
+![The agentcairn Memory list in Obsidian — memory notes with date, harness, project, and importance, filterable by project/harness/currency](https://agentcairn.dev/obsidian-list.png)
+
+*List view — filter by project, harness, or currency; superseded memories dimmed and badged.*
+
 ## Features
 
 - **Memory list** — every memory note, with keyword search and filters by **project**, **harness**, **currency**, and **tag**, sortable by newest or importance. Click a row to open the note.
@@ -17,11 +25,11 @@ The plugin treats a note as memory when its frontmatter has `type: memory`. It r
 
 ## Install
 
-**Community store:** search "agentcairn" in Settings → Community plugins (once accepted).
+**Community store (recommended):** in Obsidian, open **Settings → Community plugins → Browse**, search for **"agentcairn"**, install, and enable. [View the listing →](https://community.obsidian.md/plugins/agentcairn)
 
 **Manual:** download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/ccf/agentcairn-obsidian/releases) into `<your-vault>/.obsidian/plugins/agentcairn/`, then enable it in Settings → Community plugins.
 
-Open the Memory view via the **brain** ribbon icon or the command **"agentcairn: Open Memory view"**.
+Open the Memory view via the **brain** ribbon icon or the command **"agentcairn: Open memory view"**.
 
 ## Scope
 
