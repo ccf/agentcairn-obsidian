@@ -1,7 +1,7 @@
 {
   "name": "agentcairn-obsidian",
-  "version": "0.3.6",
-  "description": "See, filter, and navigate your agentcairn agent-memory vault in Obsidian.",
+  "version": "0.3.7",
+  "description": "See and navigate your AI agent's long-term memory — a graph of memories with provenance and currency.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
