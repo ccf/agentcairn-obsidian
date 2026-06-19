@@ -27,6 +27,14 @@ Open the Memory view via the **brain** ribbon icon or the command **"agentcairn:
 
 This is the legibility surface. **Semantic recall is intentionally not in the browser** — it lives in the `cairn` CLI / MCP server (hybrid BM25 + vector + rerank over the same vault), because in-browser vector search isn't available. This plugin is the read/navigate layer; agentcairn's CLI/MCP is the recall layer.
 
+## Privacy & permissions
+
+The plugin is **read-only and local-only**:
+
+- It enumerates the vault's **Markdown files** (`getMarkdownFiles`) to find notes whose frontmatter has `type: memory`. There is no Obsidian API to query by frontmatter without enumerating, so this is inherent to building the list/graph.
+- It reads **frontmatter only**, via Obsidian's `metadataCache` — never your note bodies.
+- It **never writes** to your vault, and makes **no network requests**. Nothing leaves your machine.
+
 ## Development
 
 ```bash
