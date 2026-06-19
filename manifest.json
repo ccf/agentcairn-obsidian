@@ -1,7 +1,7 @@
 {
   "id": "agentcairn",
   "name": "agentcairn",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "minAppVersion": "1.7.2",
   "description": "See, filter, and navigate your agentcairn agent-memory vault: provenance and currency at a glance.",
   "author": "Charles C. Figueiredo",

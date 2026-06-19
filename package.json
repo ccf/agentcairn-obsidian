@@ -1,6 +1,6 @@
 {
   "name": "agentcairn-obsidian",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "See, filter, and navigate your agentcairn agent-memory vault in Obsidian.",
   "main": "main.js",
   "scripts": {
@@ -8,7 +8,8 @@
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint": "eslint src tests"
   },
   "keywords": [
     "obsidian",
@@ -19,9 +20,11 @@
   "devDependencies": {
     "@types/d3-force": "3.0.10",
     "@types/node": "^20",
+    "@typescript-eslint/parser": "^8.61.1",
     "esbuild": "^0.21.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-obsidianmd": "^0.3.0",
     "husky": "9.1.7",
-    "lint-staged": "15.2.10",
     "obsidian": "latest",
     "typescript": "^5.4.0",
     "vitest": "^1.6.0"
