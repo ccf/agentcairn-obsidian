@@ -31,7 +31,16 @@ DOM layer (`graph`/`view`/`main`) should be thin glue over it.
 
 - `npm test` — vitest (the pure layers: `tests/*.test.ts`).
 - `npm run build` — `tsc -noEmit -skipLibCheck` (typecheck) + esbuild bundle to `main.js`.
+- `npm run lint` — eslint with `eslint-plugin-obsidianmd` over `src`/`tests`.
 - `npm run dev` — esbuild watch.
+
+## Linting
+
+`npm run lint` runs **`eslint-plugin-obsidianmd`** — the same rule set the Obsidian community-store
+review uses. It catches: APIs newer than the declared `minAppVersion` (`no-unsupported-api`, reads
+`@since` from `obsidian.d.ts`), non-sentence-case UI text (`ui/sentence-case`), raw `document` instead
+of `activeDocument` (popout safety), floating promises, and flagged dependencies (`module-replacements`).
+Config: `eslint.config.mjs` (typed rules need `tsconfig.json`; build/config `.mjs` files are ignored).
 
 ## Testing convention
 
@@ -42,9 +51,9 @@ DOM layer (`graph`/`view`/`main`) should be thin glue over it.
 
 ## Commit / CI gates
 
-- A **husky pre-commit** hook runs `lint-staged` → project typecheck + `vitest related` on staged
-  `.ts`. **CI** (`.github/workflows/ci.yml`) runs `npm test` + `npm run build` on push/PR. Every
-  commit must leave both green; never bypass with `--no-verify`.
+- A **husky pre-commit** hook runs `npm run lint && npm test && npm run build`. **CI**
+  (`.github/workflows/ci.yml`) runs lint + test + build on push/PR. Every commit must leave them
+  green; never bypass with `--no-verify`.
 
 ## Human gates (do NOT automate)
 

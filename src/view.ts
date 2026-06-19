@@ -17,7 +17,7 @@ export class MemoryView extends ItemView {
 
   constructor(leaf: WorkspaceLeaf, plugin: AgentcairnPlugin) { super(leaf); this.plugin = plugin; }
   getViewType() { return VIEW_TYPE_MEMORY; }
-  getDisplayText() { return "agentcairn memory"; }
+  getDisplayText() { return "Agentcairn memory"; }
   getIcon() { return "brain"; }
 
   async onOpen() {
@@ -61,7 +61,7 @@ export class MemoryView extends ItemView {
 
   private renderFilterBar(root: HTMLElement, all: MemoryNote[]) {
     const bar = root.createDiv({ cls: "ac-filter" });
-    const search = bar.createEl("input", { attr: { type: "text", placeholder: "search…" } });
+    const search = bar.createEl("input", { attr: { type: "text", placeholder: "Search…" } });
     search.value = this.criteria.query ?? "";
     search.oninput = () => { this.criteria.query = search.value; this.scheduleRender(); };
     const uniq = (f: (n: MemoryNote) => string | undefined) =>
