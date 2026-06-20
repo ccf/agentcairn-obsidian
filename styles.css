@@ -14,3 +14,6 @@
 .ac-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .ac-legend-note { flex-basis: 100%; }
 .ac-prov-meta { color: var(--text-muted); font-size: 12px; }
+.ac-graph .ac-hub { cursor: pointer; stroke: var(--background-primary); stroke-width: 1.5px; }
+.ac-graph .ac-hub-label { font-size: 10px; fill: var(--text-muted); pointer-events: none; }
+.ac-graph line.ac-hub-edge { stroke: var(--background-modifier-border); opacity: 0.5; }
