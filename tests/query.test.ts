@@ -106,3 +106,11 @@ test("note missing the facet gets no hub edge and is isolated when otherwise unl
   expect(g.hubs).toEqual([]);
   expect(g.isolated.has("a.md")).toBe(true);
 });
+
+test("groupBy tag dedups repeated tags within a note (count = notes, not tag entries)", () => {
+  const g = buildGraph([mkNote("a.md", { tags: ["x", "x", "y"] })], "tag");
+  const byId = Object.fromEntries(g.hubs.map((h) => [h.id, h]));
+  expect(byId["hub:tag:x"].count).toBe(1);
+  expect(g.hubs.map((h) => h.id).sort()).toEqual(["hub:tag:x", "hub:tag:y"]);
+  expect(g.edges.filter((e) => e.target === "hub:tag:x")).toHaveLength(1);
+});
