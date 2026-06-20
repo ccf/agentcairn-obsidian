@@ -64,10 +64,8 @@ export function renderGraph(
       ln.setAttribute("class", "ac-hub-edge");
     } else {
       // non-hub edge: dash if either endpoint is non-current
-      const src = l.source as GNode;
-      const tgt = l.target as GNode;
-      const srcCurrency = src.kind === "note" ? src.note.currency : "current";
-      const tgtCurrency = tgt.kind === "note" ? tgt.note.currency : "current";
+      const srcCurrency = l.source.kind === "note" ? l.source.note.currency : "current";
+      const tgtCurrency = l.target.kind === "note" ? l.target.note.currency : "current";
       if (srcCurrency !== "current" || tgtCurrency !== "current") ln.setAttribute("stroke-dasharray", "3,3");
     }
     gLinks.appendChild(ln); return ln;
@@ -113,10 +111,8 @@ export function renderGraph(
     .force("yIso", forceY<GNode>(() => hgt / 2).strength((n) => (n.kind === "note" && n.isolated ? 0.05 : 0)));
   sim.on("tick", () => {
     links.forEach((l, i) => {
-      const src = l.source as GNode;
-      const tgt = l.target as GNode;
-      lineEls[i].setAttribute("x1", String(src.x)); lineEls[i].setAttribute("y1", String(src.y));
-      lineEls[i].setAttribute("x2", String(tgt.x)); lineEls[i].setAttribute("y2", String(tgt.y));
+      lineEls[i].setAttribute("x1", String(l.source.x)); lineEls[i].setAttribute("y1", String(l.source.y));
+      lineEls[i].setAttribute("x2", String(l.target.x)); lineEls[i].setAttribute("y2", String(l.target.y));
     });
     noteNodes.forEach((n, i) => { circleEls[i].setAttribute("cx", String(n.x)); circleEls[i].setAttribute("cy", String(n.y)); });
     hubNodes.forEach((n, i) => {
