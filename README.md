@@ -1,5 +1,9 @@
 # agentcairn for Obsidian
 
+[![CI](https://github.com/ccf/agentcairn-obsidian/actions/workflows/ci.yml/badge.svg)](https://github.com/ccf/agentcairn-obsidian/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ccf/agentcairn-obsidian)](https://github.com/ccf/agentcairn-obsidian/releases)
+[![License: Apache-2.0](https://img.shields.io/github/license/ccf/agentcairn-obsidian)](https://github.com/ccf/agentcairn-obsidian/blob/main/LICENSE)
+
 See, filter, and navigate your [agentcairn](https://github.com/ccf/agentcairn) agent-memory vault — provenance, currency, and a memory graph — right inside Obsidian.
 
 agentcairn stores your coding agent's memory as plain Markdown in a vault you own. This plugin adds an interactive **Memory view** over that vault: it's **read-only** and **vault-native** — it reads only Obsidian's own metadata, never writes to your notes, and never touches agentcairn's DuckDB index.
