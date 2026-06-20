@@ -70,6 +70,8 @@ export class MemoryView extends ItemView {
       [...new Set(all.map(f).filter((v): v is string => !!v))].sort();
     this.dropdown(bar, "project", uniq((n) => n.project));
     this.dropdown(bar, "harness", uniq((n) => n.harness));
+    const allTags = [...new Set(all.flatMap((n) => n.tags))].sort();
+    this.dropdown(bar, "tag", allTags);
     this.dropdown(bar, "currency", ["current", "superseded", "expired", "not_yet_valid"]);
     const sortSel = bar.createEl("select");
     for (const k of ["newest", "importance"]) sortSel.createEl("option", { value: k, text: k });

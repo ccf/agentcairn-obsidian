@@ -34,7 +34,7 @@ export function buildGraph(notes: MemoryNote[], groupBy: GroupBy = "none"): Grap
   const hubCount = new Map<string, { value: string; count: number }>();
   if (groupBy !== "none") {
     for (const n of notes) {
-      for (const value of facetValues(n, groupBy)) {
+      for (const value of new Set(facetValues(n, groupBy))) {
         const id = `hub:${groupBy}:${value}`;
         addEdge(n.path, id);
         const h = hubCount.get(id) ?? { value, count: 0 };
