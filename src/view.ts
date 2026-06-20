@@ -1,6 +1,6 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import type AgentcairnPlugin from "./main";
-import { filterNotes, sortNotes, SortKey, FilterCriteria } from "./query";
+import { filterNotes, sortNotes, SortKey, FilterCriteria, GroupBy } from "./query";
 import { MemoryNote } from "./model";
 import { renderGraph } from "./graph";
 
@@ -11,6 +11,7 @@ export class MemoryView extends ItemView {
   criteria: FilterCriteria = {};
   sort: SortKey = "newest";
   mode: "list" | "graph" = "list";
+  groupBy: GroupBy = "none";
   selectedPath: string | null = null;
   private timer: number | null = null;
   private sim: { stop: () => void } | null = null;
@@ -51,11 +52,12 @@ export class MemoryView extends ItemView {
     const body = root.createDiv({ cls: "ac-body" });
     if (all.length === 0) body.createDiv({ cls: "ac-empty", text: "No agentcairn memories found in this vault." });
     else if (this.mode === "list") this.renderList(body, shown);
-    else this.sim = renderGraph(
-      body, shown,
-      (path) => { this.selectedPath = path; this.plugin.openNote(path); this.refreshProvenance(); },
-      () => { this.selectedPath = null; this.refreshProvenance(); },
-    );
+    else this.sim = renderGraph(body, shown, {
+      groupBy: this.groupBy,
+      onNodeClick: (path) => { this.selectedPath = path; this.plugin.openNote(path); this.refreshProvenance(); },
+      onHubClick: (facet, value) => { (this.criteria as Record<string, unknown>)[facet] = value; this.render(); },
+      onBackgroundClick: () => { this.selectedPath = null; this.refreshProvenance(); },
+    });
     this.renderProvenance(root);
   }
 
@@ -73,6 +75,12 @@ export class MemoryView extends ItemView {
     for (const k of ["newest", "importance"]) sortSel.createEl("option", { value: k, text: k });
     sortSel.value = this.sort;
     sortSel.onchange = () => { this.sort = sortSel.value as SortKey; this.scheduleRender(); };
+    const groupSel = bar.createEl("select");
+    for (const g of ["none", "project", "harness", "tag"]) {
+      groupSel.createEl("option", { value: g, text: g === "none" ? "group: none" : `group: ${g}` });
+    }
+    groupSel.value = this.groupBy;
+    groupSel.onchange = () => { this.groupBy = groupSel.value as GroupBy; this.render(); };
     const toggle = bar.createEl("button", { text: this.mode === "list" ? "Graph" : "List" });
     toggle.onclick = () => { this.mode = this.mode === "list" ? "graph" : "list"; this.selectedPath = null; this.render(); };
   }
