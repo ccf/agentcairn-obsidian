@@ -1,6 +1,6 @@
 {
   "name": "agentcairn-obsidian",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "description": "See and navigate your AI agent's long-term memory — a graph of memories with provenance and currency.",
   "main": "main.js",
   "scripts": {
