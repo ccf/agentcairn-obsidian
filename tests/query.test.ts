@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, test } from "vitest";
 import { filterNotes, sortNotes, buildGraph } from "../src/query";
 import type { MemoryNote } from "../src/model";
 
@@ -65,4 +65,44 @@ describe("sortNotes", () => {
   it("importance desc, undefined last", () => {
     expect(sortNotes(notes, "importance").map(n => n.path)).toEqual(["b.md", "a.md", "c.md"]);
   });
+});
+
+// facet-hub graph tests
+function mkNote(path: string, extra: Partial<MemoryNote> = {}): MemoryNote {
+  return {
+    path, title: path, tags: [], links: [], currency: "current",
+    project: undefined, harness: undefined, session: undefined,
+    importance: undefined, created: undefined, ...extra,
+  };
+}
+
+test("groupBy none → no hubs, unchanged shape", () => {
+  const g = buildGraph([mkNote("a.md", { links: ["b.md"] }), mkNote("b.md")], "none");
+  expect(g.hubs).toEqual([]);
+  expect(g.edges).toEqual([{ source: "a.md", target: "b.md" }]);
+});
+
+test("groupBy project → one hub per value, with counts + note→hub edges", () => {
+  const g = buildGraph(
+    [mkNote("a.md", { project: "P" }), mkNote("b.md", { project: "P" }), mkNote("c.md", { project: "Q" })],
+    "project",
+  );
+  const byId = Object.fromEntries(g.hubs.map((h) => [h.id, h]));
+  expect(byId["hub:project:P"].count).toBe(2);
+  expect(byId["hub:project:Q"].count).toBe(1);
+  expect(g.edges).toContainEqual({ source: "a.md", target: "hub:project:P" });
+  expect(g.edges).toContainEqual({ source: "c.md", target: "hub:project:Q" });
+});
+
+test("groupBy tag → a note attaches to each of its tag hubs", () => {
+  const g = buildGraph([mkNote("a.md", { tags: ["x", "y"] })], "tag");
+  expect(g.hubs.map((h) => h.id).sort()).toEqual(["hub:tag:x", "hub:tag:y"]);
+  expect(g.edges).toContainEqual({ source: "a.md", target: "hub:tag:x" });
+  expect(g.edges).toContainEqual({ source: "a.md", target: "hub:tag:y" });
+});
+
+test("note missing the facet gets no hub edge and is isolated when otherwise unlinked", () => {
+  const g = buildGraph([mkNote("a.md", {})], "project");
+  expect(g.hubs).toEqual([]);
+  expect(g.isolated.has("a.md")).toBe(true);
 });
